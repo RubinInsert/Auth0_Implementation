@@ -10,29 +10,40 @@ const config = {
     baseURL: 'http://localhost:3000',
     clientID: 'zE2Xm70iilpjPHuw2jQ4mDduXE3JQbFA',
     issuerBaseURL: 'https://dev-atqdicku.us.auth0.com',
+    auth0Logout: true,
   };
   app.use(auth(config));
-  app.get('/login', (req, res) => {
+  app.get('/auth', (req, res) => {
+    console.log("test");
     res.oidc.login({
-      returnTo: '/dashboard/index.html'
+      returnTo: '/dashboard'
     });
   });
-
-  app.get('/dashboard*', requiresAuth(), (req, res) => {
-    ServeFiles(req, res);
-    var pathDirs = req.path.split("/")
-    var isFileSpecified = pathDirs[pathDirs.length - 1].includes(".");
-    if (isFileSpecified) {
-      res.sendFile(path.join(__dirname, "/front/", req.url));
-    } else {
-      res.sendFile(path.join(__dirname, "/front/", req.url, "/index.html"));
-    }
-    console.log(path.join(__dirname, "/front/", req.url));
+  
+  app.get('/dashboard*', requiresAuth(), (req,res) => serveFiles(req, res));
+  app.get('/api/profile', (req,res) => {
+      if(req.oidc.isAuthenticated()) {
+        res.json(req.oidc.user);
+      } else {
+        res.status(400)
+        res.end();
+      }
   });
-  function ServeFiles(req, res) {
-    req.path
+  app.get('/*', (req,res) => serveFiles(req, res)); // Placed after all other pages to ensure Auth is requested for required pages.
+function serveFiles(req, res) {
+  var pathDirs = req.path.split("/")
+  var isFileSpecified = pathDirs[pathDirs.length - 1].includes(".");
+  if (isFileSpecified) {
+    res.sendFile(path.join(__dirname, "/front/", req.url));
+  } else {
+    if(pathDirs[pathDirs.length - 1] == '') { // Is there a "/" at the end of the URL? If not redirect. (Fixes issues with HTML linking)
+      res.sendFile(path.join(__dirname, "/front/", req.url, "/index.html"));
+    } else {
+      res.redirect(path.join(req.url, "/"));
+    }
+    
   }
-
+}
 //app.use(express.static('front'));
 // app.get("/login*", (req, res) => {
 //   console.log(req.url.endsWith("\\") + path.join(__dirname, "/front/", req.url));
