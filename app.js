@@ -13,6 +13,8 @@ const config = {
     auth0Logout: true,
   };
   app.use(auth(config));
+  app.use(express.json());
+  app.use(express.urlencoded({ extended: true })); // Required to parse 'body' attributes within POST requests
   app.get('/auth', (req, res) => {
     console.log("test");
     res.oidc.login({
@@ -29,6 +31,16 @@ const config = {
         res.end();
       }
   });
+  app.post("/api/watchlist/add", (req,res) => {
+    if(req.oidc.isAuthenticated()) {
+      const watchListUser = req.body;
+      res.send("{message:'success'}");
+    } else {
+      res.status(400)
+      console.log("test");
+      res.end();
+    }
+  }); 
   app.get('/*', (req,res) => serveFiles(req, res)); // Placed after all other pages to ensure Auth is requested for required pages.
 function serveFiles(req, res) {
   var pathDirs = req.path.split("/")
@@ -44,20 +56,20 @@ function serveFiles(req, res) {
     
   }
 }
-//app.use(express.static('front'));
-// app.get("/login*", (req, res) => {
-//   console.log(req.url.endsWith("\\") + path.join(__dirname, "/front/", req.url));
-//   if(req.url.endsWith("\\") + path.join(__dirname, "/front/", req.url).endsWith("\\")) {
-//     res.sendFile(
-//       path.join(__dirname, "/front/", req.url, "/index.html")
-//     );
-//   } else {
-//     res.sendFile(
-//       path.join(__dirname, "/front/", req.url)
-//     );
-//   }
-
-// });
-
 
 app.listen(3000);
+
+
+// Temp fetch req - API testing.
+
+// fetch("http://localhost:3000/api/watchlist/add", {
+//   method: "POST",
+//   body: JSON.stringify({
+//     user: 1,
+//     title: "Fix my bugs",
+//     completed: false
+//   }),
+//   headers: {
+//     "Content-type": "application/json; charset=UTF-8"
+//   }
+// });

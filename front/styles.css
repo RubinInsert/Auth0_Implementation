@@ -4,22 +4,22 @@
 }
 @keyframes webLoadBody {
     from {
-        border-top: solid #D50000 5px;
-        border-bottom: solid #D50000 5px;
+        border-top: solid #29B6F6 5px;
+        border-bottom: solid #29B6F6 5px;
 
     }
     to {
-        border-top: solid #29B6F6 5px;
-        border-bottom: solid #29B6F6 5px;
+        border-top: solid #E65100 5px;
+        border-bottom: solid #E65100 5px;
     }
 }
 @keyframes webLoadElement {
     from {
-        border: solid #D50000 5px;
+        border: solid #29B6F6 5px;
 
     }
     to {
-        border: solid #29B6F6 5px;
+        border: solid #E65100 5px;
     }
 }
 @keyframes pageSelect {
@@ -41,7 +41,8 @@ a {
 #page-select {
     min-width: 250px;
     min-height: 150px;
-    position: absolute;
+    position:fixed;
+    top:0;
     right: 0px;
     display: flex;
     flex-direction: row-reverse;
@@ -53,14 +54,14 @@ a {
     visibility: visible;
 }
 .page:hover {
-    border: solid #29B6F6 5px;
+    border: solid #E65100 5px;
 }
 #page-selected {
     animation-name: webLoadElement;
     animation-duration: 2s;
     animation-timing-function: ease-out;
     z-index: 1;
-    border: solid #29B6F6 5px;
+    border: solid #E65100 5px;
     padding: 5px;
     border-radius: 5px;
     border-radius: 0px 0px 5px 5px;
@@ -78,16 +79,64 @@ a {
     font-size: xx-large;
     font-weight: bold;
 }
+html {
+    height: 100%;
+}
+::-webkit-scrollbar {
+    background-color: #212121;
+    width: 5px;
+}
+::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 5px grey; 
+    border-radius: 10px;
+  }
+::-webkit-scrollbar-thumb {
+    background: #888;
+    filter: opacity(0.5);
+    border-radius: 5px; 
+}
+  
 body {
     font-family: 'Alegreya Sans SC';
-    border-top: solid #29B6F6 5px;
+    border-top: solid #E65100 5px;
     animation-name: webLoadBody;
     animation-duration: 2s;
     animation-timing-function: ease-out;
-    border-bottom: solid #29B6F6 5px;
-    background-color: #212121;
+    border-bottom: solid #E65100 5px;
+    background-image: url("./bg.jpg");
+    background-size: cover;
+    backdrop-filter: blur(5px) sepia(1);
+    min-height: 99.5%;
     color: #FAFAFA;
-    height: 1000px;
     padding: 0;
     margin: 0;
+}
+#content-parent {
+    margin-top: 20px;
+    display:flex;
+    justify-content: center;
+}
+#content {
+    background-color: rgba(33, 33, 33, 0.95);
+    width: 60%;
+    min-height: 500px;
+    padding: 20px;
+    transition: 1s;
+    backdrop-filter: opacity(0.5);
+}
+#content:hover {
+    border-radius: 15px;
+}
+#logged-in-container {
+    position:fixed;
+    bottom: 5px;
+    left: 5px;
+    padding: 5px;
+    background-color: #212121;
+    filter: opacity(0.95);
+    width: fit-content;
+    transition: 1s;
+}
+#logged-in-container:hover {
+    border-radius: 10px;
 }
